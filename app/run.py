@@ -5,10 +5,10 @@ from flask import render_template
 from app import app
 
 # Get Blueprint Apps
-from auth import auth_flask_login
+from auth import auth
 
 # Register Blueprints
-app.register_blueprint(auth_flask_login)
+app.register_blueprint(auth)
 
 @app.route('/')
 def home():
