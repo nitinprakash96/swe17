@@ -6,9 +6,9 @@ from flask_login import (current_user, login_required, login_user, logout_user, 
 import forms
 from libs.User import User
 
-auth_flask_login = Blueprint('auth_flask_login', __name__, template_folder='templates')
+auth = Blueprint('auth', __name__, template_folder='templates')
 
-@auth_flask_login.route("/login", methods=["GET", "POST"])
+@auth.route("/login", methods=["GET", "POST"])
 def login():
 	if request.method == "POST" and "email" in request.form:
 		email = request.form["email"]
@@ -27,7 +27,7 @@ def login():
 #
 # Route disabled - enable route to allow user registration.
 #
-@auth_flask_login.route("/register", methods=["GET","POST"])
+@auth.route("/register", methods=["GET","POST"])
 def register():
 	registerForm = forms.SignupForm(request.form)
 	current_app.logger.info(request.form)
@@ -67,7 +67,7 @@ def register():
 
 	return render_template("/auth/register.html", **templateData)
 
-@auth_flask_login.route("/reauth", methods=["GET", "POST"])
+@auth.route("/reauth", methods=["GET", "POST"])
 @login_required
 def reauth():
 	if request.method == "POST":
@@ -79,7 +79,7 @@ def reauth():
 	return render_template("/auth/reauth.html", **templateData)
 
 
-@auth_flask_login.route("/logout")
+@auth.route("/logout")
 @login_required
 def logout():
 	logout_user()
