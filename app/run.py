@@ -1,5 +1,6 @@
 import os
-from flask import render_template
+from flask import render_template,jsonify
+import json
 
 # Import the main Flask app
 from app import app
@@ -16,5 +17,5 @@ def home():
 
 # start the server
 if __name__ == "__main__":
-	port = int(os.environ.get('PORT', 8000))
+	port = int(os.getenv('PORT', 8000))
 app.run(host='127.0.0.1', port=port)
