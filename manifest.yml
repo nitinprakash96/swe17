@@ -1,0 +1,6 @@
+---
+applications:
+ - name: Diagnostic-centre
+   random-route: true
+   health-check-type: process
+   memory: 128M
