@@ -1,24 +1,37 @@
 import os
-
-from flask import Flask, render_template, request, redirect  # etc.
-from flask_mongoengine import MongoEngine, MongoEngineSessionInterface
+from cloudant import Cloudant
+from flask import Flask, render_template, request, redirect, jsonify  # etc.
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
+import json
 
 # Create and name Flask app
-app = Flask("FlaskLoginApp")
+app = Flask(__name__)
 
 # database connection
-app.config['MONGODB_SETTINGS'] = {
-	'db': 'swe2017',
-	'host': 'mongodb://localhost/swe2017',
-	'port': 12345
-}
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
-app.debug = os.environ.get('DEBUG',False)
+db_name = 'mydb'
+client = None
 
-db = MongoEngine(app) # connect MongoEngine with Flask App
-app.session_interface = MongoEngineSessionInterface(db) # sessions w/ mongoengine
+if 'VCAP_SERVICES' in os.environ:
+    vcap = json.loads(os.getenv('VCAP_SERVICES'))
+    print('Found VCAP_SERVICES')
+    if 'cloudantNoSQLDB' in vcap:
+        creds = vcap['cloudantNoSQLDB'][0]['credentials']
+        user = creds['username']
+        password = creds['password']
+        url = 'https://' + creds['host']
+        client = Cloudant(user, password, url=url, connect=True)
+        db = client.create_database(db_name, throw_on_exists=False)
+elif os.path.isfile('vcap-local.json'):
+    with open('vcap-local.json') as f:
+        vcap = json.load(f)
+        print('Found local VCAP_SERVICES')
+        creds = vcap['services']['cloudantNoSQLDB'][0]['credentials']
+        user = creds['username']
+        password = creds['password']
+        url = 'https://' + creds['host']
+        client = Cloudant(user, password, url=url, connect=True)
+        db = client.create_database(db_name, throw_on_exists=False)
 
 # Flask BCrypt will be used to salt the user password
 flask_bcrypt = Bcrypt(app)
