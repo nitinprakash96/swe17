@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block headcss %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'home/home.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<nav class="navbar navbar-default">
+	<div class="container-fluid">
+		<div class="navbar-header" id="brand">
+			<a class="navbar-brand" href="#">skillmagnet</a>
+		</div>
+		<ul class="nav navbar-nav">
+			<!-- <li class="active"><a href="#">Home</a></li> -->
+		</ul>
+		<ul class="nav navbar-nav navbar-right">
+			{% if name %}
+			<li class="dropdown">
+				<a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-user"></span> {{ name }}
+					<span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu">
+					<li><a href="/profile"> Profile </a></li>
+					<li><a href="/logout?redirect=/"> Logout </a></li>
+				</ul>
+			</li>
+			{% else %}
+			<li><a href="/login?redirect=/profile"><span class="glyphicon glyphicon-log-in"> Login </a></li>
+			{% endif %}
+		</ul>
+	</div>
+</nav>
+
+<div class="container-fluid" id="banner">
+	<div class="row">
+		<div class="col-sm-10 col-sm-push-1"  id="banner-internal">
+			<div id="welcome">Welcome to</div><div id="software">Online Assessment and Employee Recruitment Software</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

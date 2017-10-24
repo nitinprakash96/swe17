@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Panel{% endblock %}
+
+{% block headcss %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'admin/admin.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<nav class="navbar navbar-default">
+	<div class="container-fluid">
+		<div class="navbar-header" id="brand">
+			<a class="navbar-brand" href="#">ADMIN PANEL</a>
+		</div>
+		<ul class="nav navbar-nav">
+			<!-- <li class="active"><a href="#">Home</a></li> -->
+		</ul>
+		<ul class="nav navbar-nav navbar-right">
+			{% if admin_name %}
+			<li class="dropdown">
+				<a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-user"></span> {{ admin_name }}
+					<span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu">
+					<li><a href="/admin/logout"> Logout </a></li>
+				</ul>
+			</li>
+			{% endif %}
+		</ul>
+	</div>
+</nav>
+
+
+{% for o in orgs %}
+<div class="col-xs-10 col-sm-4 col-lg-3 org-card">
+	<div class="row">
+		<div class="org-name">
+			{{o.name}}
+		</div>
+		<div class="org-desc">
+			{{o.desc}}
+		</div>
+		<div class="org-email">
+			<span class="glyphicon glyphicon-envelope"></span> <a href="mailto:{{o.email}}">{{o.email}}</a>
+		</div>
+		<div class="org-website">
+			<span class="glyphicon glyphicon-link"></span> <a href="http://{{o.website}}">{{o.website}}</a>
+		</div>
+		<div class="org-location">
+			<span class="glyphicon glyphicon-map-marker"></span> {{o.location}}
+		</div>
+		<a href="/admin/verify/{{o.email}}">
+			<div class="org-btn">
+				Mark as Verified
+			</div>
+		</a>
+	</div>
+</div>
+
+{% endfor %}
+
+
+{% endblock %}
