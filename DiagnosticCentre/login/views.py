@@ -82,14 +82,17 @@ class LoginHandler(View):
 		else:
 			redirect = '/staffview'
 
-			if 'redirect' in request.POST:
-				redirect = request.POST['redirect']
+			# if 'redirect' in request.POST:
+			# 	redirect = request.POST['redirect']
 
 			if 'email' in request.POST and 'pwd' in request.POST:
 				pwd = authhelper.crypt(request.POST['pwd'])
 				email = request.POST['email']
 				client = connection.create()
 				my_database = client['staff']
+
+				for i in my_database:
+					pass
 
 				if email in my_database:
 					doc = my_database[email]
@@ -115,6 +118,8 @@ class LogoutHandler(View):
 		if 'user_type' in request.session:
 			del request.session['user_type']
 		if 'user_id' in request.session:
+			del request.session['user_id']
+		if 'admin_id' in request.session:
 			del request.session['user_id']
 
 		return HttpResponseRedirect(redirect)

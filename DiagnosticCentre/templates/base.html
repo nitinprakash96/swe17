@@ -28,8 +28,18 @@
 					<span class="caret"></span>
 				</a>
 				<ul class="dropdown-menu">
+				{% ifequal request.session.user_type "U" %}
 					<li><a href="/reports"> Reports </a></li>
 					<li><a href="/appointments"> Upcoming Appointments</a></li>
+				{% endifequal %}
+				{% ifequal request.session.user_type "S" %}
+					<li><a href="/reports"> View Schedule </a></li>
+					<li><a href="/appointments"> Upload Reports</a></li>
+				{% endifequal %}
+				{% ifequal request.session.user_type "A" %}
+					<li><a href="/reports"> Manage Staff </a></li>
+					<li><a href="/appointments"> Schedule Staff</a></li>
+				{% endifequal %}
 					<li><a href="/logout?redirect=/"> Logout </a></li>
 				</ul>
 			</li>

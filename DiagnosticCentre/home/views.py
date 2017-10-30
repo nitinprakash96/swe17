@@ -128,8 +128,7 @@ def test(request, testname):
 			return HttpResponseRedirect('/appointments')
 		else:
 			base = datetime.datetime.today()
-			date_list = [(base - datetime.timedelta(days=x)).date for x in range(0, 5)]
-			date_list = date_list[::-1]
+			date_list = [(base + datetime.timedelta(days=x)).date for x in range(0, 5)]
 			time_slots = ["9PM", "10PM", "11PM", "12PM", "2PM", "3PM", "4PM", "5PM", "6PM"]
 			context = {
 				'dates': date_list,
@@ -183,5 +182,17 @@ def cancel(request):
 		count.delete()
 		messages.info(request, 'Appointment Cancelled!')
 		return HttpResponseRedirect('/appointments')
+	else:
+		return HttpResponseRedirect('/')
+
+def staffview(request):
+	if "user_id" in request.session:
+		client = connection.create()
+		my_database = client['appointments']
+		allappoints = cloudant.result.Result(my_database.all_docs, include_docs=True)
+		context = {
+			'appointments':allappoints,
+		}
+		return render(request, "home/staffview.html", context)
 	else:
 		return HttpResponseRedirect('/')
