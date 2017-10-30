@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br><br>
+<h1>Upcoming Appointments</h1>
+{% load privatef from private %}
+
+{% if messages %}
+<div class="alert alert-success" style="width:200px; border-radius:3px;">
+    {% for message in messages %}
+    	<p>{{ message }}</p>
+    {% endfor %}
+</div>
+{% endif %}
+
+
+{% for i in appointments %}
+<div style="width:200px; border:1px solid black; border-radius:3px;">
+	<h3>{{ i.type }} test</h3>
+	<p>{{ i.time }} on {{ i.date }}</p>
+	<form method="POST" action="/cancel">{% csrf_token %}
+		<input type="hidden" name="id" value="{{ i|privatef }}">
+		<input type="submit" name="submit" value="Cancel">
+	</form>
+</div>
+<br>
+{% endfor %}
+{% endblock %}

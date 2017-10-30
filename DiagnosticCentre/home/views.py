@@ -5,6 +5,10 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from DiagnosticCentre import connection
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+import datetime
+import cloudant
+import json
+from django.contrib import messages
 
 # Create your views here.
 
@@ -23,7 +27,7 @@ def home(request):
 	# print(cloudant_creds)
 	# client = Cloudant(cloudant_user, cloudant_pass, url=cloudant_url, connect=True, auto_renew=True)
 	# my_database = client['users']
-
+	context = {}
 	if 'user_id' in request.session:
 		client = connection.create()
 
@@ -40,9 +44,9 @@ def home(request):
 		user_id = request.session['user_id']
 
 		if user_id in my_database:
-			return HttpResponseRedirect("/profile")
+			context = {'name': request.session['user_id']}
 
-	return render(request, "home/home.html", {})
+	return render(request, "home/home.html", context)
 
 def profile(request):
 
@@ -107,3 +111,77 @@ def profile(request):
 			return HttpResponseRedirect("/login?redirect=/profile")
 
 	return HttpResponseRedirect("/login?redirect=/profile")
+
+def test(request, testname):
+	if "user_id" in request.session:
+		if request.method == "POST":
+			date = request.POST.get('date')
+			time = request.POST.get('timeslot')
+			print date, time
+			client = connection.create()
+			my_database = client['appointments']
+			doc = {'email': request.session['user_id'], "type": testname, "date": date, "time": time}
+			new_doc = my_database.create_document(doc)
+			# if new_doc.exists():
+			# 	print "abcd"
+
+			return HttpResponseRedirect('/appointments')
+		else:
+			base = datetime.datetime.today()
+			date_list = [(base - datetime.timedelta(days=x)).date for x in range(0, 5)]
+			date_list = date_list[::-1]
+			time_slots = ["9PM", "10PM", "11PM", "12PM", "2PM", "3PM", "4PM", "5PM", "6PM"]
+			context = {
+				'dates': date_list,
+				'times': time_slots,
+				'title': testname,
+			}
+			return render(request, "home/blood.html", context)
+	else:
+		return HttpResponseRedirect('/')
+
+def appointments(request):
+	if "user_id" in request.session:
+		client = connection.create()
+		my_database = client['appointments']
+		res = cloudant.query.Query(my_database, selector={"email":request.session['user_id']},fields=['_id', 'type', 'date', 'time'])
+		# print res
+		appoints = res(limit=20, skip=0)["docs"]
+		# print "abceeeeeeeeeeeeeeeee "+appoints[0]["_id"]
+		context = {
+			'appointments': appoints,
+		}
+		return render(request, 'home/appointments.html', context)
+	else:
+		return HttpResponseRedirect('/')
+
+def checkAvailability(request):
+	testname = request.GET.get('testname')
+	date = request.GET.get('date')
+	time = request.GET.get('time')
+	client = connection.create()
+	my_database = client['appointments']
+	res = cloudant.query.Query(my_database, selector={"type":testname, "date" : date, "time": time} ,fields=['type', 'date', 'time'])
+	count = res(limit=100, skip=0)["docs"]
+	if len(count) >= 10:
+		message = "Not Available"
+	else:
+		message = "Available"
+
+	context = {
+		'message' : message,
+	}
+	return HttpResponse(json.dumps(context),content_type="application/json")
+
+def cancel(request):
+	if "user_id" in request.session and request.method=="POST":
+		ids = request.POST.get('id')
+		print ids
+		client = connection.create()
+		my_database = client['appointments']
+		count = my_database[ids]
+		count.delete()
+		messages.info(request, 'Appointment Cancelled!')
+		return HttpResponseRedirect('/appointments')
+	else:
+		return HttpResponseRedirect('/')

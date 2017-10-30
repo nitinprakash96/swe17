@@ -9,34 +9,6 @@
 
 {% block content %}
 
-<nav class="navbar navbar-default navbar-fixed-top">
-	<div class="container-fluid">
-		<div class="navbar-header" id="brand">
-			<a class="navbar-brand" href="/">Diagnostic Centre</a>
-		</div>
-		<ul class="nav navbar-nav navbar-right">
-			<li class="active"><a href="#">Home</a></li>
-			<li><a href="#">About</a></li>
-			<li><a href="#">Services</a></li>
-			<li><a href="#">Contact</a></li>
-
-			{% if name %}
-			<li class="dropdown">
-				<a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-user"></span> {{ name }}
-					<span class="caret"></span>
-				</a>
-				<ul class="dropdown-menu">
-					<li><a href="/profile"> Profile </a></li>
-					<li><a href="/logout?redirect=/"> Logout </a></li>
-				</ul>
-			</li>
-			{% else %}
-			<li><a href="/login?redirect=/profile"><span class="glyphicon glyphicon-log-in"> Login </a></li>
-			{% endif %}
-			</ul>
-	</div>
-</nav>
-
 <!-- Header with Background Image -->
    <header class="business-header">
 	 <div class="container">
@@ -83,36 +55,42 @@
           <div class="card">
             <img class="card-img-top" src="http://placehold.it/300x200" alt="">
             <div class="card-body">
-              <h4 class="card-title">Card title</h4>
+              <h4 class="card-title">Blood Test</h4>
               <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente esse necessitatibus neque sequi doloribus.</p>
             </div>
+            {% if name %}
             <div class="card-footer">
-              <a href="#" class="btn btn-primary">Find Out More!</a>
+              <a href="/book/blood" class="btn btn-primary">Book Appointment</a>
             </div>
+            {% endif %}
           </div>
         </div>
         <div class="col-sm-4 my-4">
           <div class="card">
             <img class="card-img-top" src="http://placehold.it/300x200" alt="">
             <div class="card-body">
-              <h4 class="card-title">Card title</h4>
+              <h4 class="card-title">Sugar Test</h4>
               <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente esse necessitatibus neque sequi doloribus totam ut praesentium aut.</p>
             </div>
+            {% if name %}
             <div class="card-footer">
-              <a href="#" class="btn btn-primary">Find Out More!</a>
+              <a href="/book/sugar" class="btn btn-primary">Book Appointment</a>
             </div>
+            {% endif %}
           </div>
         </div>
         <div class="col-sm-4 my-4">
           <div class="card">
             <img class="card-img-top" src="http://placehold.it/300x200" alt="">
             <div class="card-body">
-              <h4 class="card-title">Card title</h4>
+              <h4 class="card-title">Diabetes Test</h4>
               <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente esse necessitatibus neque.</p>
             </div>
+            {% if name %}
             <div class="card-footer">
-              <a href="#" class="btn btn-primary">Find Out More!</a>
+              <a href="/book/diabetes" class="btn btn-primary">Book Appointment</a>
             </div>
+            {% endif %}
           </div>
         </div>
 

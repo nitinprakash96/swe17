@@ -11,8 +11,36 @@
 <body>
 	<div class="container-fluid">
 		<div class="row">
-			{% block content %}
-			{% endblock %}
+			<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="container-fluid">
+		<div class="navbar-header" id="brand">
+			<a class="navbar-brand" href="/">Diagnostic Centre</a>
+		</div>
+		<ul class="nav navbar-nav navbar-right">
+			<li class="active"><a href="#">Home</a></li>
+			<li><a href="#">About</a></li>
+			<li><a href="#">Services</a></li>
+			<li><a href="#">Contact</a></li>
+
+			{% if "user_id" in request.session %}
+			<li class="dropdown">
+				<a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-user"></span> {{ request.session.user_id }}
+					<span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu">
+					<li><a href="/reports"> Reports </a></li>
+					<li><a href="/appointments"> Upcoming Appointments</a></li>
+					<li><a href="/logout?redirect=/"> Logout </a></li>
+				</ul>
+			</li>
+			{% else %}
+			<li><a href="/login?redirect=/"><span class="glyphicon glyphicon-log-in"> Login </a></li>
+			{% endif %}
+			</ul>
+	</div>
+</nav>
+{% block content %}
+{% endblock %}
 		</div>
 	</div>
 	{% block bodyjs %}

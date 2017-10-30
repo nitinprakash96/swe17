@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}Blood Test{% endblock %}
+
+{% block headcss %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+{% endblock %}
+
+{% block content %}
+<style type="text/css">
+input[type=radio] {
+    position: absolute;
+    visibility: hidden;
+    display: none;
+  }
+
+  label {
+    display: inline-block;
+    cursor: pointer;
+    padding: 5px 20px;
+    font-weight: normal;
+
+  }
+
+  input[type=radio]:checked + label{
+    color: white;
+    background: #2196F3;
+    /*border: 3px solid black;*/
+    width: 100px;
+    border-radius: 2px;
+  }
+
+  input[type=radio] + label {
+    border-left: solid 3px #332f35;
+    color: white;
+    background: #989696;
+    border-radius: 2px;
+    width: 100px;
+  }
+  .radio-group {
+    /*border: solid 3px #332f35;*/
+    display: inline-block;
+    width: 90%;
+    font-family: Arial;
+    overflow: hidden;
+  }
+
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+</style>
+<meta id="my-data" data="{{ title }}">
+<body>
+<h1>{{ title }} Test</h1>
+<form method="POST">{% csrf_token %}
+		<h3>Select date</h3>
+			<div class="radio-group">
+				{% for i in dates %}
+					<input type="radio" id="date-{{ forloop.counter }}" name="date" value="{{ i }}"><label for="date-{{ forloop.counter }}">{{ i }}</label>
+				{% endfor %}
+
+				<h3>Select Time Slot</h3>
+				{% for i in times %}
+					<input type="radio" id="time-{{ forloop.counter }}" name="timeslot" value="{{ i }}"><label for="time-{{ forloop.counter }}">{{ i }}</label>
+				{% endfor %}
+			</div>
+			<div id="availability"></div>
+			<input type="submit" id="submit" name="submit" class="btn btn-primary" value="Book">
+</form>
+</body>
+<script type="text/javascript">
+	document.getElementById("date-1").checked = true;
+	$("#submit").prop("disabled", true);
+	$('input[name="timeslot"]').on('change', function() {
+		var name = "{{ title }}"
+		console.log(name);
+		$("#availability").html("<p style='color:blue'>Please wait! Checking for availability.</p>");
+		$("#submit").prop("disabled", true);
+    	$.ajax({
+            type:"GET",
+            url:'/checkavail/',
+            data : {
+              'testname': name,
+              'date': $("input[name=date]:checked").val(),
+              'time': $("input[name=timeslot]:checked").val(),
+            },
+            success : function (data){
+            	if(data['message'] == "Available"){
+              		$("#availability").html("<p style='color:green'>"+data['message']+"</p>");
+              		$("#submit").prop("disabled", false);
+            	}
+              	else{
+              		$("#availability").html("<p style='color:red'>"+data['message']+"</p>");
+              		$("#submit").prop("disabled", true);
+              	}
+            }
+        });
+	});
+
+	$('input[name="date"]').on('change', function() {
+		$("input[name='timeslot']").prop("checked", false);
+		$("#availability").html("");
+		$("#submit").prop("disabled", true);
+	});
+</script>
+
+{% endblock %}

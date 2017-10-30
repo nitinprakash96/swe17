@@ -18,11 +18,13 @@ authcode
 
 class LoginHandler(View):
 	def get(self,request):
+		if "user_type" in request.session:
+			return HttpResponseRedirect("/")
 		context = {}
 		if 'redirect' in request.GET:
 			context["redirect"] = request.GET['redirect']
 		else:
-			context["redirect"] = '/profile'
+			context["redirect"] = '/'
 
 		if 'authcode' in request.session:
 			if request.session["authcode"] == 0:
@@ -48,48 +50,61 @@ class LoginHandler(View):
 		return render(request, "login/login.html", context)
 
 	def post(self,request):
+		# print request.POST.get('type')
+		if request.POST.get('type') == 'customer':
+			redirect = '/'
+			print "abcd"
+			if 'redirect' in request.POST:
+				redirect = request.POST['redirect']
 
-		print(request.POST)
+			if 'email' in request.POST and 'pwd' in request.POST:
 
-		redirect = '/profile'
-		if 'redirect' in request.POST:
-			redirect = request.POST['redirect']
-
-		if 'email' in request.POST and 'pwd' in request.POST:
-
-			pwd = authhelper.crypt(request.POST['pwd'])
-			email = request.POST['email']
-			client = connection.create()
-			is_org = False
-			if 'org' in request.POST:
-				my_database = client['organization']
-				is_org = True
-			else:
+				pwd = authhelper.crypt(request.POST['pwd'])
+				email = request.POST['email']
+				print email, pwd
+				client = connection.create()
 				my_database = client['users']
-
-			for doc in my_database:
-				pass
-
-			if email in my_database:
-				doc = my_database[email]
-				if is_org:
-					if not doc['verified']:
-						request.session['authcode'] = 4
-						return HttpResponseRedirect("/login?redirect="+redirect)
-
-				if doc['password'] == pwd:
-					request.session['user_id'] = doc['_id']
-					if is_org:
-						request.session['user_type'] = 'O'
-					else:
+				for i in my_database:
+					pass
+				if email in my_database:
+					doc = my_database[email]
+					print doc['password']
+					if doc['password'] == pwd:
+						request.session['user_id'] = doc['_id']
 						request.session['user_type'] = 'U'
-					return HttpResponseRedirect(redirect)
+						return HttpResponseRedirect(redirect)
 
-			request.session['authcode'] = 1
+				request.session['authcode'] = 1
+				return HttpResponseRedirect("/login?redirect="+redirect)
+
+			request.session['authcode'] = 0
+			return HttpResponseRedirect("/login?redirect="+redirect)
+		else:
+			redirect = '/staffview'
+
+			if 'redirect' in request.POST:
+				redirect = request.POST['redirect']
+
+			if 'email' in request.POST and 'pwd' in request.POST:
+				pwd = authhelper.crypt(request.POST['pwd'])
+				email = request.POST['email']
+				client = connection.create()
+				my_database = client['staff']
+
+				if email in my_database:
+					doc = my_database[email]
+
+					if doc['password'] == pwd:
+						request.session['user_id'] = doc['_id']
+						request.session['user_type'] = 'S'
+						return HttpResponseRedirect(redirect)
+
+				request.session['authcode'] = 1
+				return HttpResponseRedirect("/login?redirect="+redirect)
+
+			request.session['authcode'] = 0
 			return HttpResponseRedirect("/login?redirect="+redirect)
 
-		request.session['authcode'] = 0
-		return HttpResponseRedirect("/login?redirect="+redirect)
 
 class LogoutHandler(View):
 	def get(self,request):
@@ -117,11 +132,11 @@ class RegisterUser(View):
 			pwd = authhelper.crypt(data['pwd'])
 			client = connection.create()
 			my_database = client['users']
-			doc = {"_id": _id, "name": name, "password": pwd, "organization": {}}
+			doc = {"_id": _id, "name": name, "password": pwd}
 			new_doc = my_database.create_document(doc)
 			if new_doc.exists():
 				request.session['authcode'] = 2
-				return HttpResponseRedirect("/login?redirect=/profile")
+				return HttpResponseRedirect("/login?redirect=/")
 			else:
 				request.session['authcode'] = 3
 				return HttpResponseRedirect("/register/user")
