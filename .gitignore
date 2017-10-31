@@ -101,3 +101,7 @@ ENV/
 .mypy_cache/
 
 */*/*.pyc
+*.pyc
+
+#static folder should not be pushed!
+static_cdn/
