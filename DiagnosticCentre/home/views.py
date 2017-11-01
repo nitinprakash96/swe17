@@ -175,7 +175,6 @@ def checkAvailability(request):
 def cancel(request):
 	if "user_id" in request.session and request.method=="POST":
 		ids = request.POST.get('id')
-		print ids
 		client = connection.create()
 		my_database = client['appointments']
 		count = my_database[ids]
@@ -186,7 +185,7 @@ def cancel(request):
 		return HttpResponseRedirect('/')
 
 def staffview(request):
-	if "user_id" in request.session:
+	if "user_id" in request.session and request.session['user_type'] == "S":
 		client = connection.create()
 		my_database = client['appointments']
 		allappoints = cloudant.result.Result(my_database.all_docs, include_docs=True)
@@ -194,5 +193,48 @@ def staffview(request):
 			'appointments':allappoints,
 		}
 		return render(request, "home/staffview.html", context)
+	else:
+		return HttpResponseRedirect('/')
+
+def addstaff(request):
+	if request.method == "POST":
+		name = request.POST.get('name')
+		email = request.POST.get('email')
+		password = request.POST.get('password')
+		types = request.POST.get('type')
+
+		client = connection.create()
+		my_database = client['staff']
+		doc = {'_id': email, "type": types, "name": name, "password": password}
+		new_doc = my_database.create_document(doc)
+		messages.info(request, 'Staff Added!')
+	return HttpResponseRedirect('/managestaff')
+
+def removestaff(request):
+	if "user_id" in request.session and request.method=="POST" and request.session['user_type'] == "A":
+		ids = request.POST.get('id')
+		client = connection.create()
+		my_database = client['staff']
+		count = my_database[ids]
+		count.delete()
+		messages.info(request, 'Staff Removed!')
+		return HttpResponseRedirect('/managestaff')
+	else:
+		return HttpResponseRedirect('/')
+
+def upload(request, id):
+	if "user_id" in request.session and request.session['user_type'] == "S" and request.session['staff_type'] == "SS":
+		if request.method=="POST":
+			pass
+		else:
+			client = connection.create()
+			my_database = client['appointments']
+			res = cloudant.query.Query(my_database, selector={"_id":id},fields=['_id', 'type', 'date', 'time', 'email'])
+			appointment = res(limit=2, skip=0)["docs"][0]
+			context = {
+				'appointment':appointment,
+			}
+			return render(request, "home/upload.html", context)
+
 	else:
 		return HttpResponseRedirect('/')

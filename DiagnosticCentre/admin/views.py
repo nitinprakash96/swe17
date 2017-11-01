@@ -51,20 +51,11 @@ class AdminLogin(View):
 					return HttpResponseRedirect("/managestaff")
 
 			request.session["authcode"] = 1
-			return HttpResponseRedirect("/admin/login")
+			return HttpResponseRedirect("/admin")
 
 		else:
 			request.session["authcode"] = 0
-			return HttpResponseRedirect("/admin/login")
-
-# class AdminLogout(View):
-# 	def get(self, request):
-# 		if 'admin_id' in request.session:
-# 			del request.session['admin_id']
-# 			del request.session['user_id']
-# 			del request.session['user_type']
-
-# 		return HttpResponseRedirect("/")
+			return HttpResponseRedirect("/admin")
 
 class managestaff(View):
 	def get(self, request):
@@ -98,8 +89,8 @@ class managestaff(View):
 					return HttpResponseRedirect("/managestaff")
 
 			request.session["authcode"] = 1
-			return HttpResponseRedirect("/admin/login")
+			return HttpResponseRedirect("/admin")
 
 		else:
 			request.session["authcode"] = 0
-			return HttpResponseRedirect("/admin/login")
+			return HttpResponseRedirect("/admin")
