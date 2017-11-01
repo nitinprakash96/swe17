@@ -1,0 +1,35 @@
+{% load privatef from private %}
+<h3>Appointment Details</h3>
+Type: {{ appointment.type }}<br>
+Customer E-mail: {{ appointment.email }}<br>
+Appointment: {{ appointment.time }} on {{ appointment.date }}
+
+<h3>Report Details</h3>
+<form method="POST" action="/uploadrep" enctype="multipart/form-data">{% csrf_token %}
+<input type="hidden" name="id" value="{{ appointment|privatef }}">
+<input type="hidden" name="email" value="{{ appointment.email }}">
+<input type="hidden" name="time" value="{{ appointment.time }}">
+<input type="hidden" name="date" value="{{ appointment.date }}">
+<input type="hidden" name="type" value="{{ appointment.type }}">
+
+Upload report: <input type="file" name="file" accept="uploaded_files/*" required><br><br>
+Comments: <textarea name="comment" rows="4"></textarea><br><br>
+Doctor Recommendation: <select name="doctor">
+						<option value="None">--Select--</option>
+						<optgroup label ="Dermatologist">
+						<option value="Dr. Sachin Sharda">Dr. Sachin Sharda</option>
+						<option value="Dr. Dimple Kothari">Dr. Dimple Kothari</option>
+						<option value="Dr. Arun Partani">Dr. Arun Partani</option>
+						</optgroup>
+						<optgroup label ="Urologist">
+						<option value="Dr. Devendra Sharma">Dr. Devendra Sharma</option>
+						<option value="Dr. Aashish K. Sharma">Dr. Aashish K. Sharma</option>
+						</optgroup>
+						<optgroup label="Orthopedist">
+						<option value="Dr. Rajiv Gupta">Dr. Rajiv Gupta</option>
+						<option value="Dr. Arun Partani">Dr. Arun Partani</option>
+						</optgroup>
+						</select><br><br>
+Pharmacy Recommendation: <input type="text" name="pharmacy"><br><br>
+<input type="submit" name="submit">
+</form>

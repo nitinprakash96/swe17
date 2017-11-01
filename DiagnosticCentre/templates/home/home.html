@@ -16,24 +16,36 @@
 		</button>
 		
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
-			<ul class="navbar-nav mr-auto">
-				<li class="nav-item active">
-					<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">Features</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">Pricing</a>
-				</li>
-				<li class="nav-item btn-group">
-					<a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-					<div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink">
-						<a class="dropdown-item" href="#">Action</a>
-						<a class="dropdown-item" href="#">Another action</a>
-						<a class="dropdown-item" href="#">Something else here</a>
-					</div>
-				</li>
+			<ul class="nav navbar-nav navbar-right">
+				<li class="active"><a href="#">Home</a></li>
+				<li><a href="#">About</a></li>
+				<li><a href="#">Services</a></li>
+				<li><a href="#">Contact</a></li>
+
+				{% if "user_id" in request.session %}
+					<li class="dropdown">
+					<a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-user"></span> {{ request.session.user_id }}
+					<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+					{% ifequal request.session.user_type "U" %}
+					<li><a href="/reports"> Reports </a></li>
+					<li><a href="/appointments"> Upcoming Appointments</a></li>
+					{% endifequal %}
+					{% ifequal request.session.user_type "S" %}
+					<li><a href="/"> View Schedule </a></li>
+					<li><a href="/staffview"> Upload Reports</a></li>
+					{% endifequal %}
+					{% ifequal request.session.user_type "A" %}
+					<li><a href="/managestaff"> Manage Staff </a></li>
+					<li><a href="/"> Schedule Staff</a></li>
+					{% endifequal %}
+					<li><a href="/logout?redirect=/"> Logout </a></li>
+				</ul>
+			</li>
+			{% else %}
+			<li><a href="/login?redirect=/"><span class="glyphicon glyphicon-log-in"> Login </a></li>
+			{% endif %}
 			</ul>
 			{% if name %}
 			<li class="dropdown">
@@ -227,8 +239,6 @@
                     </ul>
                 </div>
                 <!--/.Fourth column-->
-
-            </div>
         </div>
         <!--/.Footer Links-->
 

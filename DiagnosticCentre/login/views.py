@@ -100,6 +100,7 @@ class LoginHandler(View):
 					if doc['password'] == pwd:
 						request.session['user_id'] = doc['_id']
 						request.session['user_type'] = 'S'
+						request.session['staff_type'] = doc['type']
 						return HttpResponseRedirect(redirect)
 
 				request.session['authcode'] = 1
@@ -120,7 +121,9 @@ class LogoutHandler(View):
 		if 'user_id' in request.session:
 			del request.session['user_id']
 		if 'admin_id' in request.session:
-			del request.session['user_id']
+			del request.session['admin_id']
+		if 'staff_type' in request.session:
+			del request.session['staff_type']
 
 		return HttpResponseRedirect(redirect)
 

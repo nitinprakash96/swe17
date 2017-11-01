@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load privatef from private %}
+<br><br>
+<style type="text/css">
+    *{font-family: 'Roboto', sans-serif;}
+
+@keyframes click-wave {
+  0% {
+    height: 40px;
+    width: 40px;
+    opacity: 0.35;
+    position: relative;
+  }
+  100% {
+    height: 200px;
+    width: 200px;
+    margin-left: -80px;
+    margin-top: -80px;
+    opacity: 0;
+  }
+}
+
+.option-input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  -o-appearance: none;
+  appearance: none;
+  position: relative;
+  top: 13.33333px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 30px;
+  width: 30px;
+  transition: all 0.15s ease-out 0s;
+  background: #cbd1d8;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  margin-right: 0.5rem;
+  outline: none;
+  position: relative;
+  z-index: 1000;
+}
+.option-input:hover {
+  background: #9faab7;
+}
+.option-input:checked {
+  background: #40e0d0;
+}
+.option-input:checked::before {
+  height: 30px;
+  width: 30px;
+  position: absolute;
+  content: '✔';
+  display: inline-block;
+  font-size: 26.66667px;
+  text-align: center;
+  line-height: 40px;
+}
+.option-input.radio {
+  border-radius: 50%;
+}
+.option-input.radio::after {
+  border-radius: 50%;
+  outline: none;
+}
+
+</style>
+<center>
+{% if messages %}
+<div class="alert alert-success" style="width:200px; border-radius:3px;">
+    {% for message in messages %}
+    	<p>{{ message }}</p>
+    {% endfor %}
+</div>
+{% endif %}
+</center>
+<div style="float:right;border:1px solid black;border-radius:3px">
+<h3>Add Staff</h3>
+<form method="POST" action="/addstaff">{% csrf_token %}
+	Name: <input type="text" name="name"><br>
+	Email: <input type="text" name="email"><br>
+	Password: <input type="password" name="password"><br>
+	Select Type <div>
+                      <label>
+                        <input type="radio" class="option-input radio" name="type" value="SS" style="outline:none" checked />
+                        Supervising Staff
+                      </label>
+                      <label>
+                        <input type="radio" class="option-input radio" name="type" value="N" style="outline:none" />
+                        Nurse
+                      </label>
+                    </div><br>
+                    <input type="submit" name="submit" value="Add Staff">
+</form>
+</div>
+<br>
+<h3>Staff List</h3>
+{% for i in staff %}
+<div style="border:1px solid black; border-radius:4px; width: 400px">
+	Name: {{ i.doc.name }}
+	<form method="POST" action="/removestaff" style="float:right">{% csrf_token %}
+		<input type="hidden" name="id" value="{{ i.doc|privatef }}">
+		<input type="submit" name="submit" value="Remove Staff">
+	</form><br>
+	Email ID: {{ i.doc|privatef }}<br>
+	{% ifequal i.doc.type "SS" %}
+		Type: Supervising Staff
+	{% else %}
+		Type: Nurse
+	{% endifequal %}
+	<br>
+</div>
+<br>
+{% endfor %}
+{% endblock %}

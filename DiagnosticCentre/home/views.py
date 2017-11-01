@@ -9,7 +9,9 @@ import datetime
 import cloudant
 import json
 from django.contrib import messages
-
+from base64 import b64encode
+import base64
+from wsgiref.util import FileWrapper
 # Create your views here.
 
 def home(request):
@@ -175,7 +177,6 @@ def checkAvailability(request):
 def cancel(request):
 	if "user_id" in request.session and request.method=="POST":
 		ids = request.POST.get('id')
-		print ids
 		client = connection.create()
 		my_database = client['appointments']
 		count = my_database[ids]
@@ -186,7 +187,7 @@ def cancel(request):
 		return HttpResponseRedirect('/')
 
 def staffview(request):
-	if "user_id" in request.session:
+	if "user_id" in request.session and request.session['user_type'] == "S":
 		client = connection.create()
 		my_database = client['appointments']
 		allappoints = cloudant.result.Result(my_database.all_docs, include_docs=True)
@@ -196,3 +197,107 @@ def staffview(request):
 		return render(request, "home/staffview.html", context)
 	else:
 		return HttpResponseRedirect('/')
+
+def addstaff(request):
+	if request.method == "POST":
+		name = request.POST.get('name')
+		email = request.POST.get('email')
+		password = request.POST.get('password')
+		types = request.POST.get('type')
+
+		client = connection.create()
+		my_database = client['staff']
+		doc = {'_id': email, "type": types, "name": name, "password": password}
+		new_doc = my_database.create_document(doc)
+		messages.info(request, 'Staff Added!')
+	return HttpResponseRedirect('/managestaff')
+
+def removestaff(request):
+	if "user_id" in request.session and request.method=="POST" and request.session['user_type'] == "A":
+		ids = request.POST.get('id')
+		client = connection.create()
+		my_database = client['staff']
+		count = my_database[ids]
+		count.delete()
+		messages.info(request, 'Staff Removed!')
+		return HttpResponseRedirect('/managestaff')
+	else:
+		return HttpResponseRedirect('/')
+
+def upload(request, id):
+	if "user_id" in request.session and request.session['user_type'] == "S" and request.session['staff_type'] == "SS":
+		client = connection.create()
+		my_database = client['appointments']
+		res = cloudant.query.Query(my_database, selector={"_id":id},fields=['_id', 'type', 'date', 'time', 'email'])
+		appointment = res(limit=2, skip=0)["docs"][0]
+		context = {
+			'appointment':appointment,
+		}
+		return render(request, "home/upload.html", context)
+
+	else:
+		return HttpResponseRedirect('/')
+
+def uploadrep(request):
+	if "user_id" in request.session and request.session['user_type'] == "S" and request.session['staff_type'] == "SS":
+		if request.method=="POST":
+			file = request.FILES['file']
+			comment = request.POST.get('comment')
+			doctor = request.POST.get('doctor')
+			pharmacy = request.POST.get('pharmacy')
+			email = request.POST.get('email')
+			date = request.POST.get('date')
+			time = request.POST.get('time')
+			types = request.POST.get('type')
+			ids = request.POST.get('id')
+
+			client = connection.create()
+			my_database = client['reports']
+			content = b64encode(file.read())
+			doc = {'uploaded_by': request.session['user_id'], "type": types, "email": email, "pharmacy": pharmacy, 
+					"doctor": doctor, "comment": comment, "date": date, "time":time, "file": content}
+
+			new_doc = my_database.create_document(doc)
+			# connection.close()
+
+			# client = connection.create()
+			my_database = client['appointments']
+			count = my_database[ids]
+			count.delete()
+
+			messages.info(request, 'Report Uploaded!')
+			return HttpResponseRedirect('/staffview')
+	else:
+		return HttpResponseRedirect('/')
+
+def showreports(request):
+	if "user_id" in request.session and request.session['user_type'] == "U":
+		client = connection.create()
+		my_database = client['reports']
+		res = cloudant.query.Query(my_database, selector={"email":request.session["user_id"]},fields=["_id","type", "email", "pharmacy", "doctor", "comment", "date", "time"])
+		reports = res(limit=100, skip=0)["docs"]
+		context = {
+			'reports':reports,
+		}
+		return render(request, "home/reports.html", context)
+
+	else:
+		return HttpResponseRedirect('/')
+
+def download(request):
+	if request.method == "POST" and "user_id" in request.session:
+		ids = request.POST.get("id")
+		client = connection.create()
+		my_database = client['reports']
+		res = cloudant.query.Query(my_database, selector={"_id":ids},fields=["file"])
+		reports = res(limit=100, skip=0)["docs"][0]
+		# file = document.get_attachment(file_name, attachment_type='binary')
+		file = base64.decodestring(reports["file"])
+		# with open("imageToSave.png", "wb") as fh:
+		# 	fh.write(base64.decodebytes(img_data))
+		# response = HttpResponse(FileWrapper(file), mimetype='application/force-download')
+		# response['Content-Disposition'] = 'attachment; filename="file.png"'
+		context = {
+			'file': file,
+		}
+		return render(request, 'home/test.html', context)
