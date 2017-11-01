@@ -106,10 +106,11 @@
 							<!--Card content-->
 							<div class="card-body">
 								<!--Title-->
-								<h4 class="card-title">Mesmerizing Landscapes</h4>
+								<h4 class="card-title">Blood Test</h4>
 								<!--Text-->
 								<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-								<a href="#" class="btn btn-info">Read more</a>
+								{% if name %}
+								<a href="/book/blood" class="btn btn-info">Book Appointment</a>{% endif %}
 							</div>
 
 						</div>
@@ -128,10 +129,11 @@
 							<!--Card content-->
 							<div class="card-body">
 								<!--Title-->
-								<h4 class="card-title">Trevelers Toolbox</h4>
+								<h4 class="card-title">X-Ray</h4>
 								<!--Text-->
 								<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-								<a href="#" class="btn btn-info">Read more</a>
+								{% if name %}
+								<a href="/book/xray" class="btn btn-info">Book Appointment</a>{% endif %}
 							</div>
 
 						</div>
@@ -151,10 +153,11 @@
 							<!--Card content-->
 							<div class="card-body">
 								<!--Title-->
-								<h4 class="card-title">Mountain Rivers</h4>
+								<h4 class="card-title">Urine Test</h4>
 								<!--Text-->
 								<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-								<a href="#" class="btn btn-info">Read more</a>
+								{% if name %}
+								<a href="/book/urine" class="btn btn-info">Book Appointment</a>{% endif %}
 							</div>
 
 						</div>
