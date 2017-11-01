@@ -1,41 +1,69 @@
-/*!
- * Start Bootstrap - Busines Frontpage (http://startbootstrap.com/template-overviews/business-frontpage)
- * Copyright 2013-2017 Start Bootstrap
- * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-business-frontpage/blob/master/LICENSE)
- */
-
+html,
 body {
-    padding-top: 54px;
-}
+	height: 100%;
+	}
+	
+	/* Navigation*/
+	.navbar {
+		background-color: transparent;
+	}
 
-@media (min-width: 992px) {
-    body {
-        padding-top: 56px;
-    }
-}
+	.top-nav-collapse {
+		background-color: #304a74;
+	}
 
-.business-header {
-    height: 50vh;
-    min-height: 300px;
-    background: url('http://placehold.it/1920x400') center center no-repeat scroll;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    background-size: cover;
-    -o-background-size: cover;
-}
+	footer.page-footer {
+		background-color: #304a74;
+	}
 
-.card {
-    height: 100%;
-}
+	@media only screen and (max-width: 768px) {
+		.navbar {
+			background-color: #4285F4;
+		}
+	}
 
-.pb-5, .py-5 {
-    padding-bottom: 3rem!important;
-}
+	.scrolling-navbar {
+			-webkit-transition: background .5s ease-in-out, padding .5s ease-in-out;
+			-moz-transition: background .5s ease-in-out, padding .5s ease-in-out;
+			transition: background .5s ease-in-out, padding .5s ease-in-out;
+		}
+		
+		/* Carousel*/
+		.carousel {
+			height: 50%;
+		}
 
-.pt-5, .py-5 {
-    padding-top: 3rem!important;
-}
+		@media (max-width: 776px) {
+			.carousel {
+				height: 100%;
+			}
+		}
 
-.bg-dark {
-    background-color: #343a40!important;
-}
+		.carousel-item,
+		.active {
+			height: 100%;
+		}
+
+		.carousel-inner {
+			height: 100%;
+		}
+		/*Caption*/
+
+		.flex-center {
+			color: #fff;
+		}
+		.navbar .btn-group .dropdown-menu a:hover {
+			color: #000 !important;
+		}
+		.navbar .btn-group .dropdown-menu a:active {
+			color: #fff !important;
+		}
+
+	.header_image {
+		height: 50vh;
+		min-height: 300px;
+		-webkit-background-size: cover;
+		-moz-background-size: cover;
+		background-size: cover;
+		-o-background-size: cover;
+	}
