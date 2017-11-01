@@ -20,7 +20,7 @@ from django.conf.urls.static import static
 
 from home.views import (home, profile, test, appointments, 
 							checkAvailability, cancel, staffview,
-							addstaff, removestaff, upload)
+							addstaff, removestaff, upload, uploadrep, download, showreports)
 from login.views import LoginHandler, LogoutHandler, RegisterUser
 from admin.views import AdminLogin, managestaff
 
@@ -42,6 +42,9 @@ urlpatterns = [
 	url(r'^cancel', cancel),
 	url(r'^removestaff', removestaff),
 	url(r'^upload/(?P<id>[a-z,A-Z,0-9-,\w+/]+)/$', upload),
+	url(r'^uploadrep', uploadrep),
+	url(r'^reports/', showreports),
+	url(r'^download', download),
 ]
 
 if settings.DEBUG:
