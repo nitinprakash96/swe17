@@ -4,69 +4,129 @@
 
 {% block headcss %}
 {% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static '/css/main.css' %}">
+<link href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="{% static '/css/material.min.css' %}">
+<link rel="stylesheet" href="{% static '/css/styles.css' %}">
 {% endblock %}
 
 {% block content %}
 <style type="text/css">
 input[type=radio] {
-    position: absolute;
-    visibility: hidden;
-    display: none;
+	position: absolute;
+	visibility: hidden;
+	display: none;
   }
 
   label {
-    display: inline-block;
-    cursor: pointer;
-    padding: 5px 20px;
-    font-weight: normal;
+	display: inline-block;
+	cursor: pointer;
+	padding: 20px 20px;
+	font-weight: bold;
 
   }
 
   input[type=radio]:checked + label{
-    color: white;
-    background: #2196F3;
-    /*border: 3px solid black;*/
-    width: 100px;
-    border-radius: 2px;
+	color: white;
+	background: #2196F3;
+	/*border: 3px solid black;*/
+	width: 110px;
+	border-radius: 2px;
   }
 
   input[type=radio] + label {
-    border-left: solid 3px #332f35;
-    color: white;
-    background: #989696;
-    border-radius: 2px;
-    width: 100px;
+	border-left: solid 3px #332f35;
+	color: white;
+	background: #989696;
+	border-radius: 2px;
+	width: 110px;
   }
   .radio-group {
-    /*border: solid 3px #332f35;*/
-    display: inline-block;
-    width: 90%;
-    font-family: Arial;
-    overflow: hidden;
+	/*border: solid 3px #332f35;*/
+	display: inline-block;
+	width: 90%;
+	font-family: Arial;
+	overflow: hidden;
   }
 
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 </style>
-<meta id="my-data" data="{{ title }}">
-<body>
-<h1>{{ title }} Test</h1>
-<form method="POST">{% csrf_token %}
-		<h3>Select date</h3>
-			<div class="radio-group">
-				{% for i in dates %}
-					<input type="radio" id="date-{{ forloop.counter }}" name="date" value="{{ i }}"><label for="date-{{ forloop.counter }}">{{ i }}</label>
-				{% endfor %}
 
-				<h3>Select Time Slot</h3>
-				{% for i in times %}
-					<input type="radio" id="time-{{ forloop.counter }}" name="timeslot" value="{{ i }}"><label for="time-{{ forloop.counter }}">{{ i }}</label>
-				{% endfor %}
-			</div>
-			<div id="availability"></div>
-			<input type="submit" id="submit" name="submit" class="btn btn-primary" value="Book">
-</form>
-</body>
+
+</head>
+	<div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
+		<header class="demo-header mdl-layout__header mdl-color--grey-100 mdl-color-text--grey-600">
+	  <div class="mdl-layout__header-row">
+		  <span class="mdl-layout-title">Home</span>
+			<div class="mdl-layout-spacer"></div>
+		  <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
+
+	  </div>
+	</div>
+	</header>
+	<div class="demo-drawer mdl-layout__drawer mdl-color--blue-grey-900 mdl-color-text--blue-grey-50">
+	<header class="demo-drawer-header">
+	  <img src="images/user.jpg" class="demo-avatar">
+	  <div class="demo-avatar-dropdown">
+	  <span>hello@example.com</span>
+	  <div class="mdl-layout-spacer"></div>
+	  <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="accbtn">
+		<li class="mdl-menu__item">hello@example.com</li>
+		<li class="mdl-menu__item">info@example.com</li>
+		<li class="mdl-menu__item"><i class="material-icons">add</i>Add another account...</li>
+	  </ul>
+	  </div>
+	</header>
+	<nav class="demo-navigation mdl-navigation mdl-color--blue-grey-800">
+	  <a class="mdl-navigation__link" href=""><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">home</i>Home</a>
+	  <a class="mdl-navigation__link" href="report.html"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">inbox</i>My Reports</a>
+	  <a class="mdl-navigation__link" href=""><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">forum</i>Upcoming Appointments</a>
+	  <a class="mdl-navigation__link" href=""><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">flag</i>Upload Report</a>
+	  <div class="mdl-layout-spacer"></div>
+	  <a class="mdl-navigation__link" href=""><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">help_outline</i><span class="visuallyhidden">Help</span></a>
+	</nav>
+	</div>
+	<main class="mdl-layout__content mdl-color--grey-100">
+	<div class="mdl-grid demo-content">
+	  <div class="demo-charts mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
+
+<!--Card Content-->
+<div class="container">
+<h1>{{ title }} Test</h1>
+	<div class="row my-5">
+		<!--First columnn-->
+		<div class="col-lg-12">
+			<form method="POST">{% csrf_token %}
+				<h3>Select date:</h3>
+	  			<div class="radio-group">
+					{% for i in dates %}
+		  			<input class="btn btn-primary" type="radio" id="date-{{ forloop.counter }}" name="date" value="{{ i }}"><label for="date-{{ forloop.counter }}">{{ i }}</label>
+					{% endfor %}
+
+					<h3>Select Time Slot:</h3>
+					{% for i in times %}
+		  			<input class="btn btn-primary" type="radio" id="time-{{ forloop.counter }}" name="timeslot" value="{{ i }}"><label for="time-{{ forloop.counter }}">{{ i }}</label>
+					{% endfor %}
+	  			</div>
+	  			<div id="availability"></div>
+	  		<input type="submit" id="submit" name="submit" class="btn btn-primary" value="Book">
+	  		<br><br><br><br><br><br><br><br><br><br><br>
+		</form>
+		  </div>
+		  <!--Third columnn-->
+	  </div>
+	<!--/.Card Content-->
+	<div class="row my-5">
+		<div class="col-lg-12">
+			
+		</div>
+	</div>
+  </div>
+  </div>
+</div>
+<meta id="my-data" data="{{ title }}">
+
 <script type="text/javascript">
 	document.getElementById("date-1").checked = true;
 	$("#submit").prop("disabled", true);
@@ -75,25 +135,25 @@ input[type=radio] {
 		console.log(name);
 		$("#availability").html("<p style='color:blue'>Please wait! Checking for availability.</p>");
 		$("#submit").prop("disabled", true);
-    	$.ajax({
-            type:"GET",
-            url:'/checkavail/',
-            data : {
-              'testname': name,
-              'date': $("input[name=date]:checked").val(),
-              'time': $("input[name=timeslot]:checked").val(),
-            },
-            success : function (data){
-            	if(data['message'] == "Available"){
-              		$("#availability").html("<p style='color:green'>"+data['message']+"</p>");
-              		$("#submit").prop("disabled", false);
-            	}
-              	else{
-              		$("#availability").html("<p style='color:red'>"+data['message']+"</p>");
-              		$("#submit").prop("disabled", true);
-              	}
-            }
-        });
+		$.ajax({
+			type:"GET",
+			url:'/checkavail/',
+			data : {
+			  'testname': name,
+			  'date': $("input[name=date]:checked").val(),
+			  'time': $("input[name=timeslot]:checked").val(),
+			},
+			success : function (data){
+				if(data['message'] == "Available"){
+					$("#availability").html("<p style='color:green'>"+data['message']+"</p>");
+					$("#submit").prop("disabled", false);
+				}
+				else{
+					$("#availability").html("<p style='color:red'>"+data['message']+"</p>");
+					$("#submit").prop("disabled", true);
+				}
+			}
+		});
 	});
 
 	$('input[name="date"]').on('change', function() {

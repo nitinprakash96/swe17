@@ -10,41 +10,41 @@
 <!--Navbar-->
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top scrolling-navbar">
 	<div class="container">
-		<a class="navbar-brand" href="#">Navbar</a>
+		<a class="navbar-brand" href="/">Diagnostic Centre</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
 		
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
-			<ul class="nav navbar-nav navbar-right">
-				<li class="active"><a href="#">Home</a></li>
-				<li><a href="#">About</a></li>
-				<li><a href="#">Services</a></li>
-				<li><a href="#">Contact</a></li>
+			<ul class="nav navbar-nav navbar-right mr-auto">
+				<li class="nav-item active"><a class="nav-link" href="#">Home</a></li>
+				<li class="nav-item"><a class="nav-link" href="#">About</a></li>
+				<li class="nav-item"><a class="nav-link" href="#">Services</a></li>
+				<li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
 
 				{% if "user_id" in request.session %}
-					<li class="dropdown">
-					<a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-user"></span> {{ request.session.user_id }}
+					<li class="mr-sm-2 dropdown">
+					<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-user"></span> {{ request.session.user_id }}
 					<span class="caret"></span>
 					</a>
-					<ul class="dropdown-menu">
+					<ul class="dropdown-menu ">
 					{% ifequal request.session.user_type "U" %}
-					<li><a href="/reports"> Reports </a></li>
-					<li><a href="/appointments"> Upcoming Appointments</a></li>
+					<li><a class="dropdown-item" href="/reports"> Reports </a></li>
+					<li><a class="dropdown-item" href="/appointments"> Upcoming Appointments</a></li>
 					{% endifequal %}
 					{% ifequal request.session.user_type "S" %}
-					<li><a href="/"> View Schedule </a></li>
-					<li><a href="/staffview"> Upload Reports</a></li>
+					<li><a class="dropdown-item" href="/"> View Schedule </a></li>
+					<li><a class="dropdown-item" href="/staffview"> Upload Reports</a></li>
 					{% endifequal %}
 					{% ifequal request.session.user_type "A" %}
-					<li><a href="/managestaff"> Manage Staff </a></li>
-					<li><a href="/"> Schedule Staff</a></li>
+					<li><a class="dropdown-item" href="/managestaff"> Manage Staff </a></li>
+					<li><a class="dropdown-item" href="/"> Schedule Staff</a></li>
 					{% endifequal %}
-					<li><a href="/logout?redirect=/"> Logout </a></li>
+					<li><a class="dropdown-item" href="/logout?redirect=/"> Logout </a></li>
 				</ul>
 			</li>
 			{% else %}
-			<li><a href="/login?redirect=/"><span class="glyphicon glyphicon-log-in"> Login </a></li>
+			<li><a class="nav-link" href="/login?redirect=/"><span class="glyphicon glyphicon-log-in"> Login </a></li>
 			{% endif %}
 			</ul>
 		</div>
