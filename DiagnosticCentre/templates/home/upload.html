@@ -1,35 +1,131 @@
-{% load privatef from private %}
-<h3>Appointment Details</h3>
-Type: {{ appointment.type }}<br>
-Customer E-mail: {{ appointment.email }}<br>
-Appointment: {{ appointment.time }} on {{ appointment.date }}
+{% extends 'base.html' %}
 
-<h3>Report Details</h3>
-<form method="POST" action="/uploadrep" enctype="multipart/form-data">{% csrf_token %}
-<input type="hidden" name="id" value="{{ appointment|privatef }}">
-<input type="hidden" name="email" value="{{ appointment.email }}">
-<input type="hidden" name="time" value="{{ appointment.time }}">
-<input type="hidden" name="date" value="{{ appointment.date }}">
-<input type="hidden" name="type" value="{{ appointment.type }}">
+{% block headcss %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static '/css/main.css' %}">
+<link href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="{% static '/css/material.min.css' %}">
+<link rel="stylesheet" href="{% static '/css/main.css' %}">
+{% endblock %}
 
-Upload report: <input type="file" name="file" accept="uploaded_files/*" required><br><br>
-Comments: <textarea name="comment" rows="4"></textarea><br><br>
-Doctor Recommendation: <select name="doctor">
-						<option value="None">--Select--</option>
-						<optgroup label ="Dermatologist">
-						<option value="Dr. Sachin Sharda">Dr. Sachin Sharda</option>
-						<option value="Dr. Dimple Kothari">Dr. Dimple Kothari</option>
-						<option value="Dr. Arun Partani">Dr. Arun Partani</option>
-						</optgroup>
-						<optgroup label ="Urologist">
-						<option value="Dr. Devendra Sharma">Dr. Devendra Sharma</option>
-						<option value="Dr. Aashish K. Sharma">Dr. Aashish K. Sharma</option>
-						</optgroup>
-						<optgroup label="Orthopedist">
-						<option value="Dr. Rajiv Gupta">Dr. Rajiv Gupta</option>
-						<option value="Dr. Arun Partani">Dr. Arun Partani</option>
-						</optgroup>
-						</select><br><br>
-Pharmacy Recommendation: <input type="text" name="pharmacy"><br><br>
-<input type="submit" name="submit">
-</form>
+{% block content %}
+
+
+</head>
+	<div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
+		<header class="demo-header mdl-layout__header mdl-color--grey-100 mdl-color-text--grey-600">
+	  <nav class="navbar navbar-expand-lg navbar-dark fixed-top scrolling-navbar">
+	<div class="container">
+		<a class="navbar-brand" href="/">Diagnostic Centre</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="nav navbar-nav navbar-right mr-auto">
+				<li class="nav-item active"><a class="nav-link" href="#">Home</a></li>
+				<li class="nav-item"><a class="nav-link" href="#">About</a></li>
+				<li class="nav-item"><a class="nav-link" href="#">Services</a></li>
+				<li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+
+				{% if "user_id" in request.session %}
+					<li class="mr-sm-2 dropdown">
+					<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-user"></span> {{ request.session.user_id }}
+					<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu ">
+					{% ifequal request.session.user_type "U" %}
+					<li><a class="dropdown-item" href="/reports"> Reports </a></li>
+					<li><a class="dropdown-item" href="/appointments"> Upcoming Appointments</a></li>
+					{% endifequal %}
+					{% ifequal request.session.user_type "S" %}
+					<li><a class="dropdown-item" href="/"> View Schedule </a></li>
+					<li><a class="dropdown-item" href="/staffview"> Upload Reports</a></li>
+					{% endifequal %}
+					{% ifequal request.session.user_type "A" %}
+					<li><a class="dropdown-item" href="/managestaff"> Manage Staff </a></li>
+					<li><a class="dropdown-item" href="/"> Schedule Staff</a></li>
+					{% endifequal %}
+					<li><a class="dropdown-item" href="/logout?redirect=/"> Logout </a></li>
+				</ul>
+			</li>
+			{% else %}
+			<li><a class="nav-link" href="/login?redirect=/"><span class="glyphicon glyphicon-log-in"> Login </a></li>
+			{% endif %}
+			</ul>
+		</div>
+		</div>
+</nav>
+	</header>
+	<div class="demo-drawer mdl-layout__drawer mdl-color--blue-grey-900 mdl-color-text--blue-grey-50">
+	<nav class="demo-navigation mdl-navigation mdl-color--blue-grey-800 navbar-fixed">
+	  <a class="mdl-navigation__link" href=""><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">home</i>Home</a>
+	  <a class="mdl-navigation__link" href="report.html"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">inbox</i>My Reports</a>
+	  <a class="mdl-navigation__link" href=""><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">forum</i>Upcoming Appointments</a>
+	  <a class="mdl-navigation__link" href=""><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">flag</i>Upload Report</a>
+	  <div class="mdl-layout-spacer"></div>
+	  <a class="mdl-navigation__link" href=""><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">help_outline</i><span class="visuallyhidden">Help</span></a>
+	</nav>
+	</div>
+<div class="container">
+<div class="row">
+	<div class="col-lg-8">
+		{% load privatef from private %}
+		<h3>Appointment Details</h3>
+		Type: {{ appointment.type }}<br>
+		Customer E-mail: {{ appointment.email }}<br>
+		Appointment: {{ appointment.time }} on {{ appointment.date }}
+		<hr>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-lg-12">
+	<h3>Report Details</h3>
+		<form method="POST" action="/uploadrep" enctype="multipart/form-data">{% csrf_token %}
+		<div class="form-group">
+			<input type="hidden" name="id" value="{{ appointment|privatef }}">
+		</div>
+		<div class="form-group">
+			<input type="hidden" name="email" value="{{ appointment.email }}">
+		</div>
+		<div class="form-group">
+			<input type="hidden" name="time" value="{{ appointment.time }}">
+		</div>
+		<div class="form-group">
+			<input type="hidden" name="date" value="{{ appointment.date }}">
+		</div>
+		<div class="form-group">
+			<input type="hidden" name="type" value="{{ appointment.type }}">
+		</div><br>
+
+		Upload report: <input type="file" name="file" accept="uploaded_files/*" required><br><br>
+		Comments: <textarea name="comment" rows="4"></textarea><br><br>
+		Doctor Recommendation: <select name="doctor">
+								<option value="None">--Select--</option>
+								<optgroup label ="Dermatologist">
+								<option value="Dr. Sachin Sharda">Dr. Sachin Sharda</option>
+								<option value="Dr. Dimple Kothari">Dr. Dimple Kothari</option>
+								<option value="Dr. Arun Partani">Dr. Arun Partani</option>
+								</optgroup>
+								<optgroup label ="Urologist">
+								<option value="Dr. Devendra Sharma">Dr. Devendra Sharma</option>
+								<option value="Dr. Aashish K. Sharma">Dr. Aashish K. Sharma</option>
+								</optgroup>
+								<optgroup label="Orthopedist">
+								<option value="Dr. Rajiv Gupta">Dr. Rajiv Gupta</option>
+								<option value="Dr. Arun Partani">Dr. Arun Partani</option>
+								</optgroup>
+								</select><br><br>
+		Pharmacy Recommendation: <input type="text" name="pharmacy"><br><br>
+		<input class="btn btn-primary" type="submit" name="submit">
+		</form>
+	</div>
+	</div>
+	<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+</div>	
+</div>
+
+
+{% endblock %}
