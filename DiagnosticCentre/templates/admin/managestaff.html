@@ -1,120 +1,136 @@
 {% extends 'base.html' %}
-{% block content %}
+
 {% load privatef from private %}
+{% block headcss %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static '/css/main.css' %}">
+<link href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="{% static '/css/material.min.css' %}">
+<link rel="stylesheet" href="{% static '/css/styles.css' %}">
+{% endblock %}
+
+{% block content %}
 <br><br>
 <style type="text/css">
-    *{font-family: 'Roboto', sans-serif;}
+	*{font-family: 'Roboto', sans-serif;}
 
-@keyframes click-wave {
-  0% {
-    height: 40px;
-    width: 40px;
-    opacity: 0.35;
-    position: relative;
-  }
-  100% {
-    height: 200px;
-    width: 200px;
-    margin-left: -80px;
-    margin-top: -80px;
-    opacity: 0;
-  }
-}
-
-.option-input {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  -o-appearance: none;
-  appearance: none;
-  position: relative;
-  top: 13.33333px;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 30px;
-  width: 30px;
-  transition: all 0.15s ease-out 0s;
-  background: #cbd1d8;
-  border: none;
-  color: #fff;
-  cursor: pointer;
-  display: inline-block;
-  margin-right: 0.5rem;
-  outline: none;
-  position: relative;
-  z-index: 1000;
-}
-.option-input:hover {
-  background: #9faab7;
-}
-.option-input:checked {
-  background: #40e0d0;
-}
-.option-input:checked::before {
-  height: 30px;
-  width: 30px;
-  position: absolute;
-  content: '✔';
-  display: inline-block;
-  font-size: 26.66667px;
-  text-align: center;
-  line-height: 40px;
-}
-.option-input.radio {
-  border-radius: 50%;
-}
-.option-input.radio::after {
-  border-radius: 50%;
-  outline: none;
-}
-
+@import url('https://fonts.googleapis.com/css?family=Roboto');
 </style>
-<center>
-{% if messages %}
-<div class="alert alert-success" style="width:200px; border-radius:3px;">
-    {% for message in messages %}
-    	<p>{{ message }}</p>
-    {% endfor %}
+
+
+</head>
+  <div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
+	<header class="demo-header mdl-layout__header mdl-color--grey-100 mdl-color-text--grey-600">
+	<div class="mdl-layout__header-row">
+	  <span class="mdl-layout-title">Home</span>
+	  <div class="mdl-layout-spacer"></div>
+	  <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
+
+	</div>
+  </div>
+  </header>
+  <div class="demo-drawer mdl-layout__drawer mdl-color--blue-grey-900 mdl-color-text--blue-grey-50">
+  <header class="demo-drawer-header">
+	<img src="images/user.jpg" class="demo-avatar">
+	<div class="demo-avatar-dropdown">
+	<span>hello@example.com</span>
+	<div class="mdl-layout-spacer"></div>
+	<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="accbtn">
+	<li class="mdl-menu__item">hello@example.com</li>
+	<li class="mdl-menu__item">info@example.com</li>
+	<li class="mdl-menu__item"><i class="material-icons">add</i>Add another account...</li>
+	</ul>
+	</div>
+  </header>
+  <nav class="demo-navigation mdl-navigation mdl-color--blue-grey-800">
+	<a class="mdl-navigation__link" href=""><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">home</i>Home</a>
+  </nav>
+  </div>
+  <main class="mdl-layout__content mdl-color--grey-100">
+  <div class="mdl-grid demo-content">
+	<div class="demo-charts mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
+
+<!--Card Content-->
+<div class="container">
+  <div class="row my-5">
+	<!--First columnn-->
+	<div class="col-lg-12">
+	  
+		<center>
+		{% if messages %}
+			<div class="alert alert-success" style="width:200px; border-radius:3px;">
+				{% for message in messages %}
+	  				<p>{{ message }}</p>
+				{% endfor %}
+			</div>
+		{% endif %}
+		</center>
+
+		<div style="float:right solid black;" class="col-lg-12">
+		<h3>Add Staff</h3>
+		<form method="POST" action="/addstaff">{% csrf_token %}
+			<div class="form-group">
+				<input type="text" name="name" placeholder="Name"><br>
+			</div>
+			<div class="form-group">
+				<input type="text" name="email" placeholder="Email"><br>
+			</div>
+			<div class="form-group">
+				<input type="password" name="password" placeholder="Password"><br>
+			</div>
+			<br>
+			<div class="form-group">
+				<label for="type">Select type:</label>
+  				<div>
+					<label>
+						<input type="radio" class="option-input radio" name="type" value="SS" style="outline:none" checked />
+							Supervising Staff
+					</label><br>
+					<label>
+						<input type="radio" class="option-input radio" name="type" value="N" style="outline:none" />
+							Nurse
+					</label>
+				</div>
+			</div>
+				<br>
+				<input class="btn btn-primary" type="submit" name="submit" value="Add Staff">
+		</form>
+		</div>
+
+		<hr>
+		<br>
+		<h3>Staff List</h3>
+			{% for i in staff %}
+			<div class="col-lg-6">
+  				Name: {{ i.doc.name }}
+  				<form method="POST" action="/removestaff" style="float:right">{% csrf_token %}
+					<input class="btn btn-danger" type="hidden" name="id" value="{{ i.doc|privatef }}">
+					<input class="btn btn-danger" type="submit" name="submit" value="Remove Staff">
+  				</form><br>
+  				Email ID: {{ i.doc|privatef }}<br>
+  				{% ifequal i.doc.type "SS" %}
+					Type: Supervising Staff
+  				{% else %}
+					Type: Nurse
+  				{% endifequal %}
+  				<br>
+			</div>
+			<br>
+			{% endfor %}
+
+	</div>
+	<!--Third columnn-->
 </div>
-{% endif %}
-</center>
-<div style="float:right;border:1px solid black;border-radius:3px">
-<h3>Add Staff</h3>
-<form method="POST" action="/addstaff">{% csrf_token %}
-	Name: <input type="text" name="name"><br>
-	Email: <input type="text" name="email"><br>
-	Password: <input type="password" name="password"><br>
-	Select Type <div>
-                      <label>
-                        <input type="radio" class="option-input radio" name="type" value="SS" style="outline:none" checked />
-                        Supervising Staff
-                      </label>
-                      <label>
-                        <input type="radio" class="option-input radio" name="type" value="N" style="outline:none" />
-                        Nurse
-                      </label>
-                    </div><br>
-                    <input type="submit" name="submit" value="Add Staff">
-</form>
+
+<!--/.Card Content-->
+  <div class="row my-5">
+	<div class="col-lg-12">
+	  
+	</div>
+  </div>
+  <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+  </div>
+  </div>
 </div>
-<br>
-<h3>Staff List</h3>
-{% for i in staff %}
-<div style="border:1px solid black; border-radius:4px; width: 400px">
-	Name: {{ i.doc.name }}
-	<form method="POST" action="/removestaff" style="float:right">{% csrf_token %}
-		<input type="hidden" name="id" value="{{ i.doc|privatef }}">
-		<input type="submit" name="submit" value="Remove Staff">
-	</form><br>
-	Email ID: {{ i.doc|privatef }}<br>
-	{% ifequal i.doc.type "SS" %}
-		Type: Supervising Staff
-	{% else %}
-		Type: Nurse
-	{% endifequal %}
-	<br>
-</div>
-<br>
-{% endfor %}
 {% endblock %}
