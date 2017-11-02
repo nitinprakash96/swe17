@@ -29,11 +29,6 @@
 	  <div class="demo-avatar-dropdown">
 	  <span>hello@example.com</span>
 	  <div class="mdl-layout-spacer"></div>
-	  <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="accbtn">
-		<li class="mdl-menu__item">hello@example.com</li>
-		<li class="mdl-menu__item">info@example.com</li>
-		<li class="mdl-menu__item"><i class="material-icons">add</i>Add another account...</li>
-	  </ul>
 	  </div>
 	</header>
 	<nav class="demo-navigation mdl-navigation mdl-color--blue-grey-800">
@@ -73,12 +68,14 @@
 
 
 				{% for i in appointments %}
-					<h4 class="card-title">{{ i.type }} test</h4>
+				<div class="col-lg-4">
+					<h4>{{ i.type }} test</h4>
 					<p class="card-text">{{ i.time }} on {{ i.date }}</p>
 					<form method="POST" action="/cancel">{% csrf_token %}
 						<input type="hidden" name="id" value="{{ i|privatef }}">
-						<input type="submit" id="submit" name="submit" class="btn btn-danger" value="Cancel">
+						<input class="btn btn-danger" type="submit" id="submit" name="submit" value="Cancel">
 					</form>
+				</div>
 			<br>
 			{% endfor %}
 		  </div>
