@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% load privatef from private %}
+{% block headcss %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static '/css/main.css' %}">
+<link href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="{% static '/css/material.min.css' %}">
+<link rel="stylesheet" href="{% static '/css/styles.css' %}">
+{% endblock %}
+
+{% block content %}
+<br><br>
+<style type="text/css">
+	*{font-family: 'Roboto', sans-serif;}
+
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+</style>
+
+
+</head>
+  <div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
+	<header class="demo-header mdl-layout__header mdl-color--grey-100 mdl-color-text--grey-600">
+	<div class="mdl-layout__header-row">
+	  <span class="mdl-layout-title">Home</span>
+	  <div class="mdl-layout-spacer"></div>
+	  <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
+
+	</div>
+  </div>
+  </header>
+  <div class="demo-drawer mdl-layout__drawer mdl-color--blue-grey-900 mdl-color-text--blue-grey-50">
+  <header class="demo-drawer-header">
+  <p><img src="https://upload.wikimedia.org/wikipedia/commons/1/12/User_icon_2.svg"> {{ request.session.user_id }}</p>
+  </header>
+  	<nav class="demo-navigation mdl-navigation mdl-color--blue-grey-800">
+		<a class="mdl-navigation__link" href="/"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation"></i>Home</a>
+		<a class="mdl-navigation__link" href="/managestaff"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation"></i>Manage staffs</a>
+		<a class="mdl-navigation__link" href="/feedback"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation"></i>Feedbacks</a>
+		<a class="mdl-navigation__link" href="/logout"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation"></i>Logout</a>
+		<div class="mdl-layout-spacer"></div>
+		<a class="mdl-navigation__link" href=""><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">help_outline</i><span class="visuallyhidden">Help</span></a>
+	</nav>
+	  </div>
+  <main class="mdl-layout__content mdl-color--grey-100">
+  <div class="mdl-grid demo-content">
+	<div class="demo-charts mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
+
+<!--Card Content-->
+<div class="container">
+  <div class="row my-5">
+	<!--First columnn-->
+	<div class="col-lg-12">
+	  
+		<center>
+		{% if messages %}
+			<div class="alert alert-success" style="width:200px; border-radius:3px;">
+				{% for message in messages %}
+	  				<p>{{ message }}</p>
+				{% endfor %}
+			</div>
+		{% endif %}
+		</center>
+
+		<div style="float:right solid black;" class="col-lg-12">
+		<h3>Add Staff</h3>
+		<form method="POST" action="/addstaff">{% csrf_token %}
+			<div class="form-group">
+				<input type="text" name="name" placeholder="Name"><br>
+			</div>
+			<div class="form-group">
+				<input type="text" name="email" placeholder="Email"><br>
+			</div>
+			<div class="form-group">
+				<input type="password" name="password" placeholder="Password"><br>
+			</div>
+			<br>
+			<div class="form-group">
+				<label for="type">Select type:</label>
+  				<div>
+					<label>
+						<input type="radio" class="option-input radio" name="type" value="SS" style="outline:none" checked />
+							Supervising Staff
+					</label><br>
+					<label>
+						<input type="radio" class="option-input radio" name="type" value="N" style="outline:none" />
+							Nurse
+					</label>
+				</div>
+			</div>
+				<br>
+				<input class="btn btn-primary" type="submit" name="submit" value="Add Staff">
+		</form>
+		</div>
+
+		<hr>
+		<br>
+		<h3>Staff List</h3>
+			{% for i in staff %}
+			<div class="col-lg-6">
+  				Name: {{ i.doc.name }}
+  				<form method="POST" action="/removestaff" style="float:right">{% csrf_token %}
+					<input class="btn btn-danger" type="hidden" name="id" value="{{ i.doc|privatef }}">
+					<input class="btn btn-danger" type="submit" name="submit" value="Remove Staff">
+  				</form><br>
+  				Email ID: {{ i.doc|privatef }}<br>
+  				{% ifequal i.doc.type "SS" %}
+					Type: Supervising Staff
+  				{% else %}
+					Type: Nurse
+  				{% endifequal %}
+  				<br>
+			</div>
+			<br>
+			{% endfor %}
+
+	</div>
+	<!--Third columnn-->
+</div>
+
+<!--/.Card Content-->
+  <div class="row my-5">
+	<div class="col-lg-12">
+	  
+	</div>
+  </div>
+  <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+  </div>
+  </div>
+</div>
+{% endblock %}

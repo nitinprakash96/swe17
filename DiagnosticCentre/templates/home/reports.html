@@ -1,8 +1,0 @@
-{% load privatef from private %}
-{% for i in reports %}
-	{{ i.type }}
-	<form method="POST" action="/download">{% csrf_token %}
-		<input type="hidden" name="id" value="{{ i|privatef }}">
-		<input type="submit" name="submit" value="Download">
-	</form>
-{% endfor %}

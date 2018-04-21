@@ -59,9 +59,9 @@ body {
 			color: #fff !important;
 		}
 
-	.header_image {
+	.header_img {
 		height: 50vh;
-		min-height: 300px;
+		min-height: 890px;
 		-webkit-background-size: cover;
 		-moz-background-size: cover;
 		background-size: cover;

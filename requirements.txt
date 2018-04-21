@@ -1,0 +1,16 @@
+certifi==2017.7.27.1
+chardet==3.0.4
+cloudant==2.6.0
+dj-database-url==0.3.0
+dj-static==0.0.6
+Django==1.10
+django-toolbelt==0.0.1
+gunicorn==0.17.2
+idna==2.6
+psycopg2==2.7.3.2
+pytz==2017.2
+requests==2.18.4
+static3==0.7.0
+urllib3==1.22
+virtualenv==1.8.4
+whitenoise==3.3.1

@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+
+{% block headcss %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static '/css/main.css' %}">
+<script src="https://use.fontawesome.com/34e3857a3d.js"></script>
+{% endblock %}
+
+{% block content %}
+
+<!--Navbar-->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top scrolling-navbar">
+	<div class="container">
+		<a class="navbar-brand" href="/">CURE IT LABS</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="nav navbar-nav navbar-right mr-auto">
+				<li class="nav-item active"><a class="nav-link" href="#">Home</a></li>
+				<li class="nav-item"><a class="nav-link" href="#">About</a></li>
+				<li class="nav-item"><a class="nav-link" href="#">Services</a></li>
+				<li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+			</ul>
+
+				{% if "user_id" in request.session %}
+					<span class="mr-sm-2 dropdown">
+					<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-user" style="color:white; background:#304a74">{{ request.session.user_id }}</span> 
+					</a>
+					<ul class="dropdown-menu ">
+					{% ifequal request.session.user_type "U" %}
+					<li><a class="dropdown-item" href="/reports"> Reports </a></li>
+					<li><a class="dropdown-item" href="/appointments"> Upcoming Appointments</a></li>
+					{% endifequal %}
+					{% ifequal request.session.user_type "S" %}
+					<li><a class="dropdown-item" href="/schedule"> View Schedule </a></li>
+					{% ifequal request.session.staff_type "SS" %}
+					<li><a class="dropdown-item" href="/staffview"> Upload Reports</a></li>{% endifequal %}
+					{% endifequal %}
+					{% ifequal request.session.user_type "A" %}
+					<li><a class="dropdown-item" href="/managestaff"> Manage Staff </a></li>
+					<li><a class="dropdown-item" href="/feedback"> Feedbacks </a></li>
+					{% endifequal %}
+					<li><a class="dropdown-item" href="/logout?redirect=/"> Logout </a></li>
+				</ul>
+			</span>
+			{% else %}
+			<a class="nav-link" href="/login?redirect=/" style="color:white; background:#304a74"><i class="fa fa-sign-in" aria-hidden="true"></i> Login </a>
+		{% endif %}
+			
+	</div>
+</nav>
+
+<!-- Header with Background Image -->
+<div class="header_img">
+	<img src="/static/img/bg.jpeg">
+</div>
+
+
+
+
+<div class="container">
+			<div class="row my-5">
+				<div class="col-sm-8">
+					<h2 class="mt-4">What We Do</h2>
+					<p>Cure It Labs is India's first fully automated diagnostic laboratory with a focus on providing quality at affordable costs to laboratories and hospitals in India and other countries.</p>
+					<p>Cure It Labs operates with a Centralized Processing Laboratory (CPL) in Jaipur - India for esoteric tests; and Regional Processing Laboratory in major metro cities of India and other parts of Asia. We have focus on strong technologies, strong brands and strong systems that enable all laboratories to give their clients the best of science and technology at an affordable cost.</p>
+					<!-- <p>
+						<a class="btn btn-primary btn-lg" href="#">Call to Action &raquo;</a>
+					</p> -->
+				</div>
+				<div class="col-sm-4">
+					<h2 class="mt-4">Contact Us</h2>
+					<address>
+						<strong>Cure It Labs</strong>
+						<br>Malviya Nagar, Jaipur
+						<br>
+					</address>
+					<address>
+						<abbr title="Phone">P:</abbr>
+						(+91) 0141-2563145
+						<br>
+						<abbr title="Email">E:</abbr>
+						<a href="mailto:#">contact@cureit.com</a>
+					</address>
+				</div>
+			</div>
+			<!-- /.row -->
+
+		<!--Card Content-->
+		<div class="container">
+		<h2>
+			Tests we Provide
+		</h2>
+				<div class="row my-5">
+					<!--First columnn-->
+					<div class="col-lg-4">
+						<!--Card-->
+						<div class="card wow fadeIn" data-wow-delay="0.2s">
+
+							<!--Card image-->
+							<img class="img-fluid" src="https://nedrugtest.com/wp-content/uploads/2015/10/Blood-Testing-Image.jpg" alt="Card image cap">
+
+							<!--Card content-->
+							<div class="card-body">
+								<!--Title-->
+								<h4 class="card-title">Blood Test</h4>
+								<!--Text-->
+		
+								{% if name %}
+								<a href="/book/blood" class="btn btn-info">Book Appointment</a>{% endif %}
+							</div>
+
+						</div>
+								<!--/.Card-->
+					</div>
+					<!--First columnn-->
+
+					<!--Second columnn-->
+					<div class="col-lg-4">
+						<!--Card-->
+						<div class="card wow fadeIn" data-wow-delay="0.4s">
+
+							<!--Card image-->
+							<img class="img-fluid" src="https://www.cdc.gov/nceh/radiation/images/x-rays.jpg" style="height: 173px;" alt="Card image cap">
+
+							<!--Card content-->
+							<div class="card-body">
+								<!--Title-->
+								<h4 class="card-title">X-Ray</h4>
+								<!--Text-->
+								
+								{% if name %}
+								<a href="/book/xray" class="btn btn-info">Book Appointment</a>{% endif %}
+							</div>
+
+						</div>
+						<!--/.Card-->
+
+					</div>
+					<!--Second columnn-->
+
+					<!--Third columnn-->
+					<div class="col-lg-4 mb-4">
+						<!--Card-->
+						<div class="card wow fadeIn" data-wow-delay="0.6s">
+
+							<!--Card image-->
+							<img class="img-fluid" src="http://images.addictionblog.org/cherrycake/wp-content/uploads/2015/06/Advantages-of-EtG-urine-testing-for-alcohol-2.png" style="height: 173px;" alt="Card image cap">
+
+							<!--Card content-->
+							<div class="card-body">
+								<!--Title-->
+								<h4 class="card-title">Urine Test</h4>
+								<!--Text-->
+								
+								{% if name %}
+								<a href="/book/urine" class="btn btn-info">Book Appointment</a>{% endif %}
+							</div>
+
+						</div>
+						<!--/.Card-->
+					</div>
+					<!--Third columnn-->
+			</div>
+		</div>
+		<!--/.Card Content-->
+
+
+		</div>
+		<!-- /.container -->
+
+<br>
+	<footer>
+        <!--Footer Links-->
+        <div class="container-fluid">
+            <div class="row">
+
+                <!--First column-->
+                <div class="col-lg-3 col-md-6 ml-auto">
+                    <h5 class="title font-bold mt-3 mb-4">About Cure It Labs</h5>
+                    <p>Cure It Labs is India's first fully automated diagnostic laboratory with a focus on providing quality at affordable costs to laboratories and hospitals in India and other countries.</p>
+					<p>We have focus on strong technologies, strong brands and strong systems that enable all laboratories to give their clients the best of science and technology at an affordable cost.</p>
+                </div>
+                <!--/.First column-->
+
+                <hr class="w-100 clearfix d-sm-none">
+
+                <!--Second column-->
+                <div class="col-lg-2 col-md-6 ml-auto">
+                    <h5 class="title font-bold mt-3 mb-4">Assets</h5>
+                    <ul>
+                        <li><a href="#!">X-Ray Machine</a></li>
+                        <li><a href="#!">CT Scan</a></li>
+                        <li><a href="#!">MRI</a></li>
+                        <li><a href="#!">Tissue Processor</a></li>
+                    </ul>
+                </div>
+                <!--/.Second column-->
+                <!--/.Third column-->
+
+                <hr class="w-100 clearfix d-sm-none">
+
+                <!--Fourth column-->
+                <div class="col-lg-2 col-md-6 ml-auto">
+                    <h5 class="title font-bold mt-3 mb-4">Follow me on</h5>
+                    <ul>
+                        <li><a href="#!">Facebook</a></li>
+                        <li><a href="#!">Instagram</a></li>
+                        <li><a href="#!">Twitter</a></li>
+                        <li><a href="#!">Pinterest</a></li>
+                    </ul>
+                </div>
+                <!--/.Fourth column-->
+        </div>
+        <!--/.Footer Links-->
+
+        <hr>
+
+        <!--Copyright-->
+        <div class="footer-copyright">
+            <div class="container-fluid">
+                © 2015 Copyright: <a href="https://www.MDBootstrap.com"> MDBootstrap.com </a>
+
+            </div>
+        </div>
+        <!--/.Copyright-->
+
+    </footer>
+    <!--/.Footer-->
+
+{% endblock %}
